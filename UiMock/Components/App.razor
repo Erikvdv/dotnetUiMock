@@ -1,0 +1,30 @@
+@inherits BaseComponent<App.Input>
+
+
+@if (Props.IsPartial)
+{
+    @Props.Body
+}
+else
+{
+    <html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Dotnet UI Mock</title>
+        <link href="/uimock/static/dist.css" rel="stylesheet">
+        <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+        <script src="https://unpkg.com/htmx.org/dist/ext/preload.js"></script>
+        <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+    </head>
+    <body hx-ext="preload, json-enc" class="bg-slate-200">
+    <Header/>
+    @Props.Body
+    </body>
+    </html>
+}
+
+@code {
+
+    public record Input(RenderFragment Body, bool IsPartial) : BaseComponentProps;
+
+}

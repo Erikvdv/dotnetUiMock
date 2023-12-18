@@ -1,0 +1,1 @@
+[{"ServiceName":"IWeatherService","MethodName":"GetForecastAsync","Scenario":"threeitems","DelayMs":1000},{"ServiceName":"IWeatherService","MethodName":"GetForecastAsync(string location)","Scenario":"withlocation","DelayMs":1000}]
