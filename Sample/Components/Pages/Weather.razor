@@ -1,0 +1,93 @@
+﻿@page "/weather"
+@using sample.Services
+@attribute [StreamRendering]
+
+@inject IWeatherService WeatherService
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (forecasts == null)
+{
+    <p>
+    <em>Loading...</em>
+</p>
+}
+else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (home == null)
+{
+    <p>
+    <em>Loading...</em>
+</p>
+}
+else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@home.Date.ToShortDateString()</td>
+            <td>@home.TemperatureC</td>
+            <td>@home.TemperatureF</td>
+            <td>@home.Summary</td>
+        </tr>
+    </tbody>
+</table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private WeatherForecast? home;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var forecastsTask = WeatherService.GetForecastAsync().ContinueWith(t => {
+            forecasts = t.Result;
+            InvokeAsync(StateHasChanged);
+        });
+        var homeTask = WeatherService.GetForecastAsync("home").ContinueWith(t =>
+        {
+            home = t.Result;
+            InvokeAsync(StateHasChanged);
+        });
+
+        await Task.WhenAll(forecastsTask, homeTask);
+
+    }
+
+
+}

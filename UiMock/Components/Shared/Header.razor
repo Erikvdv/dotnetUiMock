@@ -1,0 +1,29 @@
+@inherits BaseComponent<Header.Input>
+
+<div class="h-16">
+    <nav class="fixed top-0 z-30 w-full bg-white h-16 drop-shadow-md border-b-slate-400">
+
+        <div class="px-3 py-3 lg:px-5 lg:pl-3 ">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start">
+                    <a href="/uimock" class="flex ml-2 md:mr-24 text-3xl text-slate-700" hx-boost="true">
+                        Dotnet UI Mock
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ml-3">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" hx-post="/uimock/reset" hx-target="#home">
+                            Reset to Defaults
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+@code {
+
+    public record Input : BaseComponentProps;
+
+}
