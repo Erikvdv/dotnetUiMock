@@ -8,8 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+<!--      <PackageReference Include="DotnetUiMock" Version="0.0.1" />-->
       <PackageReference Include="NSubstitute" Version="5.1.0" />
     </ItemGroup>
+    
 
     <ItemGroup>
       <ProjectReference Include="..\UiMock\UiMock.csproj" Condition="'$(Configuration)' == 'Debug'" />
