@@ -20,6 +20,5 @@ You can add this file to your gitignore
 
 ### todo
 - provide usage instructions
-- improve watch for changes in mock settings
 - mock authentication/authorisation
 - support playwright (parallel) ui testing
