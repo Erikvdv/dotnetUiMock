@@ -8,10 +8,10 @@ It allows for rapid UI development and validation. Next to this it makes reprodu
 The video below gives a quick introduction to the library.
 [[create and insert video]]
 
-In the sample an example can be found for using the library with Blazor
+In the sample an example can be found for using the library with Blazor.
+The path to open UiMock is /uimock
 
 ### todo
-- Generate a NuGet package of the core library
 - provide usage instructions
 - improve watch for changes in mock settings
 - mock authentication/authorisation
