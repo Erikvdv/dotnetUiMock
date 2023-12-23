@@ -1,6 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <IsPackable>true</IsPackable>
+        <PackageId>DotnetUiMock</PackageId>
+        <Version>0.0.1</Version>
+        <Authors>Erik van de Ven</Authors>
+        <RepositoryUrl>https://github.com/Erikvdv/dotnetUiMock</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>web;blazor;mock</PackageTags>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+        <Description>
+            Allows dynamic mocking of dependencies for UI development
+        </Description>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -20,7 +32,13 @@
     <ItemGroup>
         <EmbeddedResource Include="StaticAssets\**\*"/>
     </ItemGroup>
-    
+
+    <ItemGroup>
+        <None Include="..\readme.md" Pack="true" PackagePath="">
+            <Link>Properties\README.md</Link>
+        </None>
+    </ItemGroup>
+
 
 
 </Project>
