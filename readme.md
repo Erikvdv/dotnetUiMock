@@ -11,6 +11,13 @@ The video below gives a quick introduction to the library.
 In the sample an example can be found for using the library with Blazor.
 The path to open UiMock is /uimock
 
+### uimock-selection.txt
+
+The uimock-selection.txt is added to the wwwroot of your project source files by the ui mock library. 
+This folder is watched by dotnet watch. So the moment you change your mock settings in the /uimock page, it will automatically trigger a page refresh.
+You can add this file to your gitignore
+
+
 ### todo
 - provide usage instructions
 - improve watch for changes in mock settings
