@@ -10,8 +10,9 @@ public class WeatherServiceMock : BaseMockService<IWeatherService>
 {
     public WeatherServiceMock()
     {
-        ServiceMocks = new(nameof(IWeatherService), [
-            new(nameof(IWeatherService.GetForecastAsync),
+        MethodMocks =
+        [
+            new("GetForecastAsync",
             [
                 new MockScenario("oneitem", GetForecastOneItem),
                 new MockScenario("threeitems", GetForecastThreeItems),
@@ -21,7 +22,7 @@ public class WeatherServiceMock : BaseMockService<IWeatherService>
             [
                 new MockScenario("withlocation", GetForecastWithLocation),
             ]),
-        ]);
+        ];
     }
 
     private static void GetForecastOneItem(object service, int delay)

@@ -6,6 +6,7 @@ namespace DotnetUiMock;
 public class UiMockService
 {
     public List<ServiceMocks> ServiceMocksList { get; set; } = [];
+    
     public List<SelectedScenario> SelectedScenarios { get; } = [];
 
     public void SetDefaults()
@@ -24,9 +25,20 @@ public class UiMockService
     {
         SelectedScenarios.Clear();
         foreach (var serviceMock in ServiceMocksList)
-        foreach (var mock in serviceMock.Methods)
+        foreach (var mock in serviceMock.MethodMocks)
             SelectedScenarios.Add(new SelectedScenario(serviceMock.ServiceName, mock.Name,
                 mock.Scenarios.First().Name));
+        SaveToDisk();
+    }
+
+    public void ToggleService(string serviceName, bool isMocked)
+    {
+        var service = ServiceMocksList.FirstOrDefault(x => x.ServiceName == serviceName);
+        
+        if (service == null) 
+            return;
+        
+        service.IsMocked = isMocked;
         SaveToDisk();
     }
 
@@ -43,11 +55,11 @@ public class UiMockService
         SaveToDisk();
     }
 
-    public void InvokeDelegates(string serviceName, ServiceMocks mocks, object mockedService)
+    public void InvokeDelegates(string serviceName, List<MethodMocks> mocks, object mockedService)
     {
         foreach (var scenario in SelectedScenarios.Where(x => x.ServiceName == serviceName))
         {
-            var handler = mocks.Methods
+            var handler = mocks
                 .First(x => x.Name == scenario.MethodName).Scenarios
                 .First(x => x.Name == scenario.Scenario).Handler;
             handler.DynamicInvoke(mockedService, scenario.DelayMs);

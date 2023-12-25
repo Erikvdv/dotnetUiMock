@@ -4,44 +4,47 @@
 <div class="flex justify-center" id="home">
     <table class="table-auto">
         <thead>
-        <tr>
-            <th class="px-4 py-2">Service Name</th>
-            <th class="px-4 py-2">Mock Name</th>
-            <th class="px-4 py-2">Scenario Name</th>
-            <th class="px-4 py-2">Delay (ms)</th>
-        </tr>
+            <tr>
+                <th class="px-4 py-2">Mock Name</th>
+                <th class="px-4 py-2">Scenario Name</th>
+                <th class="px-4 py-2">Delay (ms)</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var serviceMocks in Props.ServiceMocksList)
-        {
-            @foreach (var mock in serviceMocks.Methods)
+            @foreach (var serviceMocks in Props.ServiceMocksList)
             {
-                <tr hx-post="/uimock/update" hx-trigger="change" hx-include="this" hx-target="#home">
-                    <td class="border px-4 py-2">
+                <tr hx-post="/uimock/toggle" hx-trigger="change" hx-include="this" hx-target="#home">
+                    <td colspan="3" class="border px-4 py-2">
+                        <b>@serviceMocks.ServiceName</b>
                         <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
-                        @serviceMocks.ServiceName
-                    </td>
-                    <td class="border px-4 py-2">
-                        <input name='methodName' value='@mock.Name' type="hidden">
-                        @mock.Name
-                    </td>
-                    <td class="border px-4 py-2">
-                        <select name="scenario" id="@serviceMocks.ServiceName-@mock.Name">
-                            @foreach (var option in mock.Scenarios)
-                            {
-                                <option value="@option.Name"
-                                        selected="@(CheckIsActive(serviceMocks.ServiceName, mock.Name, option.Name))">
-                                    @option.Name
-                                </option>
-                            }
-                        </select>
-                    </td>
-                    <td class="border px-4 py-2">
-                        <input type="text" name="delayMs" value="@(GetDelay(serviceMocks.ServiceName, mock.Name))"/>
+                        <div class="float-right">enabled <input type="checkbox" name='isMocked' value=true checked='@serviceMocks.IsMocked'></div>   
                     </td>
                 </tr>
+                @foreach (var mock in serviceMocks.MethodMocks)
+                {
+                    <tr hx-post="/uimock/update" hx-trigger="change" hx-include="this" hx-target="#home">
+                        <td class="border px-4 py-2">
+                            <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
+                            <input name='methodName' value='@mock.Name' type="hidden">
+                            @mock.Name
+                        </td>
+                        <td class="border px-4 py-2">
+                            <select name="scenario" id="@serviceMocks.ServiceName-@mock.Name">
+                                @foreach (var option in mock.Scenarios)
+                                {
+                                    <option value="@option.Name"
+                                        selected="@(CheckIsActive(serviceMocks.ServiceName, mock.Name, option.Name))">
+                                        @option.Name
+                                    </option>
+                                }
+                            </select>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <input type="text" name="delayMs" value="@(GetDelay(serviceMocks.ServiceName, mock.Name))" />
+                        </td>
+                    </tr>
+                }
             }
-        }
         </tbody>
     </table>
 </div>
@@ -54,16 +57,16 @@
     private bool CheckIsActive(string serviceName, string methodName, string scenarioName)
     {
         return Props.SelectedScenarios.Any(
-            ss => ss.ServiceName == serviceName
-                  && ss.MethodName == methodName && ss.Scenario == scenarioName
+        ss => ss.ServiceName == serviceName
+        && ss.MethodName == methodName && ss.Scenario == scenarioName
         );
     }
 
     private string GetDelay(string serviceName, string methodName)
     {
         var service = Props.SelectedScenarios.FirstOrDefault(
-            ss => ss.ServiceName == serviceName
-                  && ss.MethodName == methodName
+        ss => ss.ServiceName == serviceName
+        && ss.MethodName == methodName
         );
         return service?.DelayMs.ToString() ?? "";
     }

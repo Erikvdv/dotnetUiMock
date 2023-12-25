@@ -2,7 +2,7 @@ namespace DotnetUiMock;
 
 public interface IMockService
 {
-    public ServiceMocks ServiceMocks { get; }
+    public List<MethodMocks> MethodMocks { get; }
 }
 
 public interface IMockService<out T> : IMockService where T : class
