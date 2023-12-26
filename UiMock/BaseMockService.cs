@@ -12,8 +12,8 @@ public abstract class BaseMockService<T> : IMockService<T> where T : class
     {
         var uiService = serviceProvider.GetRequiredService<UiMockService>();
         var stackTrace = new StackTrace();
-        var currentMethodName = new StackFrame(0).GetMethod().Name;
-        var isRecursive = stackTrace.GetFrames().Count(frame => frame.GetMethod().Name == currentMethodName) > 1;
+        var currentMethodName = new StackFrame(0).GetMethod()?.Name;
+        var isRecursive = stackTrace.GetFrames().Count(frame => frame.GetMethod()?.Name == currentMethodName) > 1;
 
         var isMocked = uiService.ServiceMocksList.FirstOrDefault(x => x.ServiceName == typeof(T).FullName)?.IsMocked ?? true;
         if (!isRecursive && !isMocked)
@@ -24,7 +24,7 @@ public abstract class BaseMockService<T> : IMockService<T> where T : class
         
         
         var service = Substitute.For<T>();
-        uiService.InvokeDelegates(typeof(T).FullName, MethodMocks, service);
+        uiService.InvokeDelegates(typeof(T).FullName!, MethodMocks, service);
         return service;
     }
 }

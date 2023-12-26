@@ -9,55 +9,31 @@ namespace DotnetUiMock;
 
 public static class WebApplicationExtensions
 {
-    public static void UseUiMock(this IServiceCollection services)
-    {
-        var mockedServices = Assembly.GetEntryAssembly()?.GetTypes()
-            .Where(x => x.GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMockService<>)))
-            .ToList();
-        if (mockedServices != null)
-            foreach (var mockedServiceType in mockedServices)
-            {
-                var interfaceType = mockedServiceType.GetInterfaces().First().GetGenericArguments().First()
-                    .UnderlyingSystemType;
-                var mockedService = Activator.CreateInstance(mockedServiceType) as IMockService;
+    private static Assembly[] UiMockAssemblies { get; set; } = [];
 
-                if (mockedService.GetType().FullName != "Castle.Proxies.ObjectProxy")
-                    continue;
-            }
+    public static void AddUiMock(this IServiceCollection services, Assembly[]? assemblies = null)
+    {
+        if (assemblies == null || assemblies.Length == 0)
+        {
+            assemblies = [Assembly.GetEntryAssembly()!];
+        }
+
+        UiMockAssemblies = assemblies;
 
         services.AddSingleton<UiMockService>();
     }
 
     public static void UseMockUi(this WebApplication app)
     {
-        List<ServiceMocks> serviceMocksList = [];
-        var mockedServices = Assembly.GetEntryAssembly()?.GetTypes()
-            .Where(x => x.GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMockService<>)))
-            .ToList();
-        using var scope = app.Services.CreateScope();
-        if (mockedServices != null)
-            foreach (var mockedServiceType in mockedServices)
-            {
-                var interfaceType = mockedServiceType.GetInterfaces().First().GetGenericArguments().First()
-                    .UnderlyingSystemType;
-                var mockedService = scope.ServiceProvider.GetRequiredService(interfaceType);
-                
+        var mockedServices = GetMockedServicesList();
 
-                if (mockedService.GetType().FullName != "Castle.Proxies.ObjectProxy")
-                    continue;
-                var mockedServiceInstance = Activator.CreateInstance(mockedServiceType) as IMockService;
-                serviceMocksList.Add(new (interfaceType.FullName, mockedServiceInstance.MethodMocks));
-            }
+        using var scope = app.Services.CreateScope();
 
         var uiService = scope.ServiceProvider.GetRequiredService<UiMockService>();
-        uiService.ServiceMocksList = serviceMocksList;
-        uiService.SetDefaults();
-
+        uiService.ServiceMocksList = GetServiceMocks(mockedServices, scope);
+        uiService.Init();
 
         app.MapUiMockEndpoints();
-
         app.UseDefaultFiles();
 
         var embeddedFileProvider = new EmbeddedFileProvider(
@@ -69,5 +45,37 @@ public static class WebApplicationExtensions
             FileProvider = embeddedFileProvider,
             RequestPath = new PathString("/uimock/static")
         });
+    }
+
+    private static List<ServiceMocks> GetServiceMocks(List<Type> mockedServices, IServiceScope scope)
+    {
+        List<ServiceMocks> serviceMocksList = [];
+        foreach (var mockedServiceType in mockedServices)
+        {
+            var interfaceType = mockedServiceType.GetInterfaces().First().GetGenericArguments().First()
+                .UnderlyingSystemType;
+            var mockedService = scope.ServiceProvider.GetRequiredService(interfaceType);
+
+            if (mockedService.GetType().FullName != "Castle.Proxies.ObjectProxy")
+                continue;
+            var mockedServiceInstance = Activator.CreateInstance(mockedServiceType) as IMockService;
+            serviceMocksList.Add(new(interfaceType.FullName!, mockedServiceInstance!.MethodMocks));
+        }
+
+        return serviceMocksList;
+    }
+
+    private static List<Type> GetMockedServicesList()
+    {
+        List<Type> mockedServices = [];
+        foreach (var assembly in UiMockAssemblies)
+        {
+            mockedServices = assembly.GetTypes()
+                .Where(x => x.GetInterfaces()
+                    .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMockService<>)))
+                .ToList();
+        }
+
+        return mockedServices;
     }
 }

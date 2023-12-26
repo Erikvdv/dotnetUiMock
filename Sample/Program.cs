@@ -1,6 +1,7 @@
+using System.Reflection;
 using DotnetUiMock;
+using Sample.Core.Services;
 using sample.Mocks;
-using sample.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,11 +12,12 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 
-#if DEBUG
+#if DEBUG // typically you don't want your mocks in production
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddScoped<IWeatherService>(provider => new WeatherServiceMock().GenerateService(provider));
-    builder.Services.UseUiMock();
+    //builder.Services.AddUiMock(); // by default, it will use the executing assembly
+    builder.Services.AddUiMock([Assembly.GetAssembly(typeof(WeatherServiceMock))]); 
 }
 #endif
 
@@ -39,19 +41,11 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<sample.Components.App>()
     .AddInteractiveServerRenderMode();
-#if DEBUG
+#if DEBUG // typically you don't want your mocks in production
 app.UseMockUi();
 #endif
 
 app.Run();
-
-namespace sample
-{
-    public partial class Program
-    {
-
-    }
-}
 
 
 

@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <OutputType>Library</OutputType>
         <IsPackable>true</IsPackable>
         <PackageId>DotnetUiMock</PackageId>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Authors>Erik van de Ven</Authors>
         <RepositoryUrl>https://github.com/Erikvdv/dotnetUiMock</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -18,14 +18,8 @@
         <Nullable>enable</Nullable>
         <RootNamespace>DotnetUiMock</RootNamespace>
     </PropertyGroup>
-
+    
     <ItemGroup>
-        <SupportedPlatform Include="browser"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web"/>
-        <PackageReference Include="Microsoft.AspNetCore.App"/>
         <PackageReference Include="NSubstitute" Version="5.1.0"/>
     </ItemGroup>
 
@@ -38,7 +32,5 @@
             <Link>Properties\README.md</Link>
         </None>
     </ItemGroup>
-
-
-
+    
 </Project>

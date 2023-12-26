@@ -1,8 +1,6 @@
 using DotnetUiMock;
 using NSubstitute;
-using NSubstitute.Core;
-using NSubstitute.ExceptionExtensions;
-using sample.Services;
+using Sample.Core.Services;
 
 namespace sample.Mocks;
 
