@@ -1,6 +1,6 @@
 ﻿namespace DotnetUiMock;
 
-public record MethodMocks(string Name, List<MockScenario> Scenarios);
+public record MethodMocks(string Name, List<MockScenario> Scenarios, int DelayMs = 0);
 
 /// <summary>
 ///     Delegate for the mock handler.
@@ -25,7 +25,7 @@ public class ServiceMocks(string serviceName, List<MethodMocks> methodMocks, boo
     
 }
 
-public class SelectedScenario(string serviceName, string methodName, string? scenario = "default", int delayMs = 100)
+public class SelectedScenario(string serviceName, string methodName, string? scenario = "default", int delayMs = 0)
 {
     public string ServiceName { get; } = serviceName;
     public string MethodName { get; } = methodName;

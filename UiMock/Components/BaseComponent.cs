@@ -7,7 +7,8 @@ public abstract record BaseComponentProps;
 
 public abstract class BaseComponent<T> : ComponentBase where T : BaseComponentProps
 {
-    [Parameter] public T Props { get; set; } = default!;
+    [Parameter] 
+    public T Props { get; set; } = default!;
 
     public RazorComponentResult GetComponent(T props)
     {

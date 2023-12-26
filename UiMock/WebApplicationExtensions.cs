@@ -56,7 +56,7 @@ public static class WebApplicationExtensions
                 .UnderlyingSystemType;
             var mockedService = scope.ServiceProvider.GetRequiredService(interfaceType);
 
-            if (mockedService.GetType().FullName != "Castle.Proxies.ObjectProxy")
+            if (!mockedService.GetType().FullName.StartsWith("Castle.Proxies") )
                 continue;
             var mockedServiceInstance = Activator.CreateInstance(mockedServiceType) as IMockService;
             serviceMocksList.Add(new(interfaceType.FullName!, mockedServiceInstance!.MethodMocks));

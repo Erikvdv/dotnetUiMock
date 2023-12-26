@@ -15,12 +15,12 @@ public class WeatherServiceMock : BaseMockService<IWeatherService>
                 new MockScenario("oneitem", GetForecastOneItem),
                 new MockScenario("threeitems", GetForecastThreeItems),
                 new MockScenario("exception", GetForecastAsyncException),
-            ]),
+            ], 200),
             new("GetForecastAsync(string location)",
             [
                 new MockScenario("withlocation", GetForecastWithLocation),
                 new MockScenario("exception", GetForecastWithLocationException),
-            ]),
+            ], 100),
         ];
     }
 
