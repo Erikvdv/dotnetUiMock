@@ -552,6 +552,10 @@ video {
   z-index: 30;
 }
 
+.float-right {
+  float: right;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -646,6 +650,10 @@ video {
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .text-3xl {

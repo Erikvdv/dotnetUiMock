@@ -13,6 +13,7 @@ public static class UiMockEndpoints
         var path = app.MapGroup("uimock");
         path.MapGet("", GetHomePage);
         path.MapPost("/update", Update);
+        path.MapPost("/toggle", Toggle);
         path.MapPost("/reset", Reset);
 
         var apipath = app.MapGroup("uimock/api");
@@ -32,6 +33,15 @@ public static class UiMockEndpoints
     private static RazorComponentResult Update(SelectedScenario scenario, UiMockService uiMockService)
     {
         uiMockService.UpdateSelectedScenario(scenario);
+        var component =
+            new HomePage().GetComponent(new HomePage.Input(uiMockService.ServiceMocksList,
+                uiMockService.SelectedScenarios));
+        return component;
+    }
+    
+    private static RazorComponentResult Toggle(ToggleRequest toggleRequest, UiMockService uiMockService)
+    {
+        uiMockService.ToggleService(toggleRequest.ServiceName, toggleRequest.IsMocked == "true");
         var component =
             new HomePage().GetComponent(new HomePage.Input(uiMockService.ServiceMocksList,
                 uiMockService.SelectedScenarios));

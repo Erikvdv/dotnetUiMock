@@ -10,8 +10,9 @@ public class WeatherServiceMock : BaseMockService<IWeatherService>
 {
     public WeatherServiceMock()
     {
-        ServiceMocks = new(nameof(IWeatherService), [
-            new(nameof(IWeatherService.GetForecastAsync),
+        MethodMocks =
+        [
+            new("GetForecastAsync",
             [
                 new MockScenario("oneitem", GetForecastOneItem),
                 new MockScenario("threeitems", GetForecastThreeItems),
@@ -20,8 +21,9 @@ public class WeatherServiceMock : BaseMockService<IWeatherService>
             new("GetForecastAsync(string location)",
             [
                 new MockScenario("withlocation", GetForecastWithLocation),
+                new MockScenario("exception", GetForecastWithLocationException),
             ]),
-        ]);
+        ];
     }
 
     private static void GetForecastOneItem(object service, int delay)
@@ -52,20 +54,29 @@ public class WeatherServiceMock : BaseMockService<IWeatherService>
 
     private static void GetForecastAsyncException(object service, int delay)
     {
-        (service as IWeatherService)?.GetForecastAsync().Throws(_ =>
+        (service as IWeatherService)?.GetForecastAsync().Returns<Task<WeatherForecast[]>>(async _ =>
         {
-            Task.Delay(delay).GetAwaiter().GetResult();
+            await Task.Delay(delay);
             throw new Exception("Exception from mock");
         });
     }
-    
+
     private static void GetForecastWithLocation(object service, int delay)
     {
         (service as IWeatherService)?.GetForecastAsync(Arg.Any<string>()).Returns(async _ =>
         {
             await Task.Delay(delay);
             return new WeatherForecast
-                {Date = new DateOnly(2021, 1, 1), TemperatureC = 10, Summary = "Freezing"};
+            { Date = new DateOnly(2021, 1, 1), TemperatureC = 10, Summary = "Freezing" };
+        });
+    }
+
+    private static void GetForecastWithLocationException(object service, int delay)
+    {
+        (service as IWeatherService)?.GetForecastAsync(Arg.Any<string>()).Returns<Task<WeatherForecast>>(async _ =>
+        {
+            await Task.Delay(delay);
+            throw new Exception("Exception from mock");
         });
     }
 

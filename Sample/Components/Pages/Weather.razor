@@ -41,7 +41,8 @@ else
     </table>
 }
 
-@if (home == null)
+
+@if (_homeForecastState.IsLoading)
 {
     <p>
     <em>Loading...</em>
@@ -49,7 +50,15 @@ else
 }
 else
 {
-    <table class="table">
+    @if (_homeForecastState.IsError)
+    {
+        <p>
+    <em>Oops, something went wrong</em>
+</p>
+    }
+    else
+    {
+        <table class="table">
     <thead>
         <tr>
             <th>Date</th>
@@ -60,32 +69,51 @@ else
     </thead>
     <tbody>
         <tr>
-            <td>@home.Date.ToShortDateString()</td>
-            <td>@home.TemperatureC</td>
-            <td>@home.TemperatureF</td>
-            <td>@home.Summary</td>
+            <td>@_homeForecastState.Forecast?.Date.ToShortDateString()</td>
+            <td>@_homeForecastState.Forecast?.TemperatureC</td>
+            <td>@_homeForecastState.Forecast?.TemperatureF</td>
+            <td>@_homeForecastState.Forecast?.Summary</td>
         </tr>
     </tbody>
 </table>
+    }
+
 }
 
 @code {
+
+    private record HomeForecastState(bool IsLoading, bool IsError, WeatherForecast? Forecast);
     private WeatherForecast[]? forecasts;
-    private WeatherForecast? home;
+    private HomeForecastState _homeForecastState = new HomeForecastState(true, false, null);
 
     protected override async Task OnInitializedAsync()
     {
-        var forecastsTask = WeatherService.GetForecastAsync().ContinueWith(t => {
-            forecasts = t.Result;
-            InvokeAsync(StateHasChanged);
-        });
-        var homeTask = WeatherService.GetForecastAsync("home").ContinueWith(t =>
-        {
-            home = t.Result;
-            InvokeAsync(StateHasChanged);
-        });
-
+        var forecastsTask = GetForecastAsync();
+        var homeTask = GetHomeForecastAsync();
         await Task.WhenAll(forecastsTask, homeTask);
+    }
+
+    private async Task GetForecastAsync()
+    {
+        forecasts = await WeatherService.GetForecastAsync();
+        StateHasChanged();
+    }
+
+    private async Task GetHomeForecastAsync()
+    {
+        _homeForecastState = new HomeForecastState(true, false, null);
+        StateHasChanged();
+
+        try
+        {
+            var home = await WeatherService.GetForecastAsync("home");
+            _homeForecastState = new HomeForecastState(false, false, home);
+        }
+        catch (Exception ex)
+        {
+            _homeForecastState = new HomeForecastState(false, true, null);
+        }
+        StateHasChanged();
 
     }
 
