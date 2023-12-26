@@ -1,9 +1,28 @@
 ﻿@page "/counter"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authentication.JwtBearer
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 @rendermode InteractiveServer
+
+@attribute [Authorize]
+
 
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
+
+<ul>
+    @foreach (var claim in _claims)
+    {
+        <li>@claim.Type: @claim.Value</li>
+    }
+</ul>
 
 <p role="status">Current count: @currentCount</p>
 
@@ -11,6 +30,15 @@
 
 @code {
     private int currentCount = 0;
+    private List<Claim> _claims;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider
+            .GetAuthenticationStateAsync();
+        var user = authState.User;
+        _claims = user.Claims.ToList();
+    }
 
     private void IncrementCount()
     {
