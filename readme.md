@@ -15,10 +15,13 @@ The path to open UiMock is /uimock
 
 The uimock-selection.txt is added to the wwwroot of your project source files by the ui mock library. 
 This folder is watched by dotnet watch. So the moment you change your mock settings in the /uimock page, it will automatically trigger a page refresh.
-You can add this file to your gitignore
+You can add this file to your gitignore as is done in the example
 
 
 ### todo
-- provide usage instructions
+- improve usage instructions and add video
+- add tests for library
+
+### wish list
 - mock authentication/authorisation
 - support playwright (parallel) ui testing

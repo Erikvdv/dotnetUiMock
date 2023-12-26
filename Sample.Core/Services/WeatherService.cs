@@ -1,4 +1,4 @@
-namespace sample.Services;
+namespace Sample.Core.Services;
 public class WeatherForecast
 {
     public DateOnly Date { get; set; }

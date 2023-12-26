@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiMock", "UiMock\UiMock.csproj", "{C1CB8BD7-1027-4A93-BA9C-515539397943}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Mocks", "Sample.Mocks\Sample.Mocks.csproj", "{E04F67A2-ED44-4EC3-8326-9689C79F76BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Core", "Sample.Core\Sample.Core.csproj", "{074C3851-A9D4-423F-81B9-FEC232628B64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{C1CB8BD7-1027-4A93-BA9C-515539397943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1CB8BD7-1027-4A93-BA9C-515539397943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1CB8BD7-1027-4A93-BA9C-515539397943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E04F67A2-ED44-4EC3-8326-9689C79F76BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E04F67A2-ED44-4EC3-8326-9689C79F76BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E04F67A2-ED44-4EC3-8326-9689C79F76BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E04F67A2-ED44-4EC3-8326-9689C79F76BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{074C3851-A9D4-423F-81B9-FEC232628B64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{074C3851-A9D4-423F-81B9-FEC232628B64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{074C3851-A9D4-423F-81B9-FEC232628B64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{074C3851-A9D4-423F-81B9-FEC232628B64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

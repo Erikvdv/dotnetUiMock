@@ -9,7 +9,7 @@ public class UiMockService
     
     public List<SelectedScenario> SelectedScenarios { get; } = [];
 
-    public void SetDefaults()
+    public void Init()
     {
         var savedScenarios = ReadFromDisk();
         if (savedScenarios != null)
