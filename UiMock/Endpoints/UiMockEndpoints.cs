@@ -10,7 +10,7 @@ public static class UiMockEndpoints
 {
     public static void MapUiMockEndpoints(this WebApplication app)
     {
-        var path = app.MapGroup("uimock");
+        var path = app.MapGroup("uimock").AllowAnonymous();
         path.MapGet("", GetHomePage);
         path.MapPost("/update", Update);
         path.MapPost("/toggle", Toggle);

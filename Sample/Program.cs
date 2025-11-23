@@ -46,7 +46,13 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Add("api");
         options.Scope.Add("offline_access");
     });
-
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    
+});
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 
 
