@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
 using DotnetUiMock.Endpoints;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+
 
 namespace DotnetUiMock;
 
@@ -56,10 +54,10 @@ public static class WebApplicationExtensions
                 .UnderlyingSystemType;
             var mockedService = scope.ServiceProvider.GetRequiredService(interfaceType);
 
-            if (!mockedService.GetType().FullName.StartsWith("Castle.Proxies") )
+            if (mockedService is null || !mockedService.GetType().FullName!.StartsWith("Castle.Proxies"))
                 continue;
             var mockedServiceInstance = Activator.CreateInstance(mockedServiceType) as IMockService;
-            serviceMocksList.Add(new(interfaceType.FullName!, mockedServiceInstance!.MethodMocks));
+            serviceMocksList.Add(new(interfaceType.FullName!, mockedServiceInstance!.MethodMocks, true, mockedServiceInstance.FriendlyName));
         }
 
         return serviceMocksList;

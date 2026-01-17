@@ -1,0 +1,125 @@
+﻿@page "/weather2"
+@using Mediator
+@using Sample.Core.Services
+@attribute [StreamRendering]
+
+@inject IMediator Mediator
+@inject IWeatherService WeatherService
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (forecasts == null)
+{
+    <p>
+    <em>Loading...</em>
+</p>
+}
+else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@if (_homeForecastState.IsLoading)
+{
+    <p>
+    <em>Loading...</em>
+</p>
+}
+else
+{
+    @if (_homeForecastState.IsError)
+    {
+        <p>
+    <em>Oops, something went wrong</em>
+</p>
+    }
+    else
+    {
+        <table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@_homeForecastState.Forecast?.Date.ToShortDateString()</td>
+            <td>@_homeForecastState.Forecast?.TemperatureC</td>
+            <td>@_homeForecastState.Forecast?.TemperatureF</td>
+            <td>@_homeForecastState.Forecast?.Summary</td>
+        </tr>
+    </tbody>
+</table>
+    }
+
+}
+
+@code {
+
+    private record HomeForecastState(bool IsLoading, bool IsError, WeatherForecast? Forecast);
+    private WeatherForecast[]? forecasts;
+    private HomeForecastState _homeForecastState = new HomeForecastState(true, false, null);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var forecastsTask = GetForecastAsync();
+        var homeTask = GetHomeForecastAsync();
+        await Task.WhenAll(forecastsTask, homeTask);
+    }
+
+    private async Task GetForecastAsync()
+    {
+        var request = new GetWeatherForecastRequest();
+        forecasts = await Mediator.Send(request);
+
+        StateHasChanged();
+    }
+
+    private async Task GetHomeForecastAsync()
+    {
+        _homeForecastState = new HomeForecastState(true, false, null);
+        StateHasChanged();
+
+        try
+        {
+            var home = await WeatherService.GetForecastAsync("home");
+            _homeForecastState = new HomeForecastState(false, false, home);
+        }
+        catch (Exception ex)
+        {
+            _homeForecastState = new HomeForecastState(false, true, null);
+        }
+        StateHasChanged();
+
+    }
+
+
+}

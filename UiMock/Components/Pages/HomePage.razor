@@ -15,7 +15,7 @@
             {
                 <tr hx-post="/uimock/toggle" hx-trigger="change" hx-include="this" hx-target="#home">
                     <td colspan="3" class="border px-4 py-2">
-                        <b>@serviceMocks.ServiceName</b>
+                        <b>@(serviceMocks.FriendlyName ?? serviceMocks.ServiceName)</b>
                         <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
                         <div class="float-right">enabled <input type="checkbox" name='isMocked' value=true checked='@serviceMocks.IsMocked'></div>   
                     </td>
