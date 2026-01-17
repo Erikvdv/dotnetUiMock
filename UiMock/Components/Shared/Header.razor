@@ -1,21 +1,20 @@
 @inherits BaseComponent<Header.Input>
 
 <div class="h-16">
-    <nav class="fixed top-0 z-30 w-full bg-white h-16 drop-shadow-md border-b-slate-400">
-
-        <div class="px-3 py-3 lg:px-5 lg:pl-3 ">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center justify-start">
-                    <a href="/uimock" class="flex ml-2 md:mr-24 text-3xl text-slate-700" hx-boost="true">
-                        Dotnet UI Mock
+    <nav class="fixed top-0 z-30 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="px-4 lg:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center justify-start gap-3">
+                     <a href="/uimock" class="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-900" hx-boost="true">
+                        <span class="text-indigo-600">Dotnet</span>UI Mock
                     </a>
                 </div>
                 <div class="flex items-center">
-                    <div class="flex items-center ml-3">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" hx-post="/uimock/reset" hx-target="#home">
-                            Reset to Defaults
-                        </button>
-                    </div>
+                    <button class="group relative inline-flex items-center justify-center px-4 py-2text-sm font-medium text-white transition-all duration-200 bg-rose-500 rounded-lg hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 shadow-sm hover:shadow-md" 
+                            hx-post="/uimock/reset" 
+                            hx-target="#home">
+                        Reset Defaults
+                    </button>
                 </div>
             </div>
         </div>
