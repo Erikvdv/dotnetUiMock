@@ -2,7 +2,7 @@ using DotnetUiMock;
 using NSubstitute;
 using Sample.Core.Services;
 
-namespace sample.Mocks;
+namespace Sample.Mocks;
 
 public class WeatherServiceMock : BaseMockService<IWeatherService>
 {

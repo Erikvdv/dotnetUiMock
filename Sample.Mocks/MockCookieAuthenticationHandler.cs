@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
@@ -11,8 +10,8 @@ public class MockCookieAuthenticationHandler : AuthenticationHandler<Authenticat
     private readonly IAuthenticationMock _authMock;
 
     public MockCookieAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, 
-        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IAuthenticationMock authMock)
-        : base(options, logger, encoder, clock)
+        ILoggerFactory logger, UrlEncoder encoder, IAuthenticationMock authMock)
+        : base(options, logger, encoder)
     {
         _authMock = authMock;
     }

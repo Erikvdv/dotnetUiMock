@@ -7,6 +7,7 @@ namespace DotnetUiMock;
 public abstract class BaseMockService<T> : IMockService<T> where T : class
 {
     public List<MethodMocks> MethodMocks { get; protected init;} = [];
+    public string? FriendlyName { get; protected init; } = null;
 
     public T GenerateService(IServiceProvider serviceProvider)
     {

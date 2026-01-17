@@ -1,0 +1,23 @@
+using Mediator;
+
+namespace Sample.Core.Services;
+
+public record GetWeatherForecastRequest() : IRequest<WeatherForecast[]>;
+
+public class GetWeatherForecastRequestHandler : IRequestHandler<GetWeatherForecastRequest, WeatherForecast[]>
+{
+    public async ValueTask<WeatherForecast[]> Handle(GetWeatherForecastRequest request, CancellationToken cancellationToken)
+    {
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] {"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"};
+        var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = startDate.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = summaries[Random.Shared.Next(summaries.Length)]
+        }).ToArray();
+        return forecasts;
+    }
+}

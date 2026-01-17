@@ -5,8 +5,7 @@ This allows to quickly validate UI behavior for different responses and response
 
 It allows for rapid UI development and validation. Next to this it makes reproducing UI issues locally a breeze as there is no dependency on a backend system (api, database etc.)
 
-The video below gives a quick introduction to the library.
-[[create and insert video]]
+The video below gives a quick introduction to the library. [click to open video](https://youtu.be/1IAF4xWnDMQ?si=HKXyBNn0-hgOyVWh)
 
 In the sample an example can be found for using the library with Blazor.
 The path to open UiMock is /uimock
@@ -19,7 +18,6 @@ You can add this file to your gitignore as is done in the example
 
 
 ### todo
-- improve usage instructions and add video
 - add tests for library
 
 ### wish list

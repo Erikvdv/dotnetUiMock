@@ -1,11 +1,15 @@
 using System.Reflection;
-using DotnetUiMock;
+using Mediator;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Sample.Core.Services;
-using sample.Mocks;
+
+
+
+#if DEBUG
+using DotnetUiMock;
 using Sample.Mocks;
+#endif
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +24,7 @@ builder.Services.AddAuthentication(options =>
         options.DefaultChallengeScheme = "oidc";
         options.DefaultSignOutScheme = "oidc";
     })
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,options =>
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
         options.Cookie.Name = "__sample";
         options.Cookie.SameSite = SameSiteMode.Strict;
@@ -35,6 +39,7 @@ builder.Services.AddAuthentication(options =>
         options.ResponseType = "code";
         options.ResponseMode = "query";
 
+
         options.MapInboundClaims = false;
         options.GetClaimsFromUserInfoEndpoint = true;
         options.SaveTokens = true;
@@ -48,7 +53,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddScoped<IWeatherService, WeatherService>();
-
+builder.Services.AddMediator(options => { options.ServiceLifetime = ServiceLifetime.Scoped; });
 
 #if DEBUG // typically you don't want your mocks in production
 if (builder.Environment.IsDevelopment())
@@ -56,9 +61,11 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddTransient<IAuthenticationMock>(provider => new AuthenticationMock().GenerateService(provider));
     builder.Services.AddScoped<IWeatherService>(provider => new WeatherServiceMock().GenerateService(provider));
     builder.Services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
+    builder.Services.AddScoped<IRequestHandler<GetWeatherForecastRequest, WeatherForecast[]>>(provider =>
+        new GetWeatherForecastHandlerMock().GenerateService(provider));
 
     //builder.Services.AddUiMock(); // by default, it will use the executing assembly
-    builder.Services.AddUiMock([Assembly.GetAssembly(typeof(WeatherServiceMock))]); 
+    builder.Services.AddUiMock([Assembly.GetAssembly(typeof(WeatherServiceMock))]);
 }
 #endif
 
@@ -71,7 +78,6 @@ app.UseAuthorization();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
 
 
 app.MapRazorComponents<sample.Components.App>()

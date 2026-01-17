@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
-using Sample.Mocks;
 
-namespace DotnetUiMock;
+namespace Sample.Mocks;
 
 public class MockSchemeProvider : AuthenticationSchemeProvider
 {

@@ -17,9 +17,10 @@ public class MockedService(string name, string fullName, bool isMocked = true)
 };
 public record MockScenario(string Name, MockHandler Handler);
 
-public class ServiceMocks(string serviceName, List<MethodMocks> methodMocks, bool isMocked = true)
+public class ServiceMocks(string serviceName, List<MethodMocks> methodMocks, bool isMocked = true, string? friendlyName = null)
 {
     public string ServiceName { get; init; } = serviceName;
+    public string? FriendlyName { get; init; } = friendlyName;
     public List<MethodMocks> MethodMocks { get; init; } = methodMocks;
     public bool IsMocked { get; set; } = isMocked;
     
