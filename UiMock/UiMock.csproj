@@ -4,6 +4,8 @@
         <OutputType>Library</OutputType>
         <IsPackable>true</IsPackable>
         <PackageId>DotnetUiMock</PackageId>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <Version>10.0.0</Version>
         <Authors>Erik van de Ven</Authors>
         <RepositoryUrl>https://github.com/Erikvdv/dotnetUiMock</RepositoryUrl>
@@ -17,6 +19,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>DotnetUiMock</RootNamespace>
+
+        
     </PropertyGroup>
 
     <ItemGroup>

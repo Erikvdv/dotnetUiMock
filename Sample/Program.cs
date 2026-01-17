@@ -1,11 +1,15 @@
 using System.Reflection;
-using DotnetUiMock;
 using Mediator;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Sample.Core.Services;
-using sample.Mocks;
+
+
+
+#if DEBUG
+using DotnetUiMock;
 using Sample.Mocks;
+#endif
 
 
 var builder = WebApplication.CreateBuilder(args);
