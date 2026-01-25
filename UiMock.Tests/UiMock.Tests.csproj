@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UiMock\UiMock.csproj" />
+    <ProjectReference Include="..\Sample.Mocks\Sample.Mocks.csproj" />
   </ItemGroup>
 
   <ItemGroup>

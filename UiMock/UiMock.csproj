@@ -6,7 +6,7 @@
         <PackageId>DotnetUiMock</PackageId>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <Version>10.0.0</Version>
+        <Version>10.0.1</Version>
         <Authors>Erik van de Ven</Authors>
         <RepositoryUrl>https://github.com/Erikvdv/dotnetUiMock</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -19,9 +19,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>DotnetUiMock</RootNamespace>
-
         
     </PropertyGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="UiMock.Tests" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="NSubstitute" Version="5.3.0" />

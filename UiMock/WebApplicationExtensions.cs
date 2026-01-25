@@ -23,7 +23,7 @@ public static class WebApplicationExtensions
 
     public static void UseMockUi(this WebApplication app)
     {
-        var mockedServices = GetMockedServicesList();
+        var mockedServices = GetMockedServicesList(UiMockAssemblies);
 
         using var scope = app.Services.CreateScope();
 
@@ -57,21 +57,23 @@ public static class WebApplicationExtensions
             if (mockedService is null || !mockedService.GetType().FullName!.StartsWith("Castle.Proxies"))
                 continue;
             var mockedServiceInstance = Activator.CreateInstance(mockedServiceType) as IMockService;
-            serviceMocksList.Add(new(interfaceType.FullName!, mockedServiceInstance!.MethodMocks, true, mockedServiceInstance.FriendlyName));
+            serviceMocksList.Add(new(interfaceType.FullName!, mockedServiceInstance!.MethodMocks, true,
+                mockedServiceInstance.FriendlyName));
         }
 
         return serviceMocksList;
     }
 
-    private static List<Type> GetMockedServicesList()
+    internal static List<Type> GetMockedServicesList(Assembly[] assemblies)
     {
         List<Type> mockedServices = [];
-        foreach (var assembly in UiMockAssemblies)
+        foreach (var assembly in assemblies)
         {
-            mockedServices = assembly.GetTypes()
+            var assemblyMocks = assembly.GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMockService<>)))
                 .ToList();
+            mockedServices.AddRange(assemblyMocks);
         }
 
         return mockedServices;
