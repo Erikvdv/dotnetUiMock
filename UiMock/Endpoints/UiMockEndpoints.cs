@@ -11,12 +11,14 @@ public static class UiMockEndpoints
     public static void MapUiMockEndpoints(this WebApplication app)
     {
         var path = app.MapGroup("uimock");
+        path.AllowAnonymous();
         path.MapGet("", GetHomePage);
         path.MapPost("/update", Update);
         path.MapPost("/toggle", Toggle);
         path.MapPost("/reset", Reset);
 
         var apipath = app.MapGroup("uimock/api");
+        apipath.AllowAnonymous();
         apipath.MapGet("", ApiGetServices);
         apipath.MapPost("/update", ApiUpdate);
     }

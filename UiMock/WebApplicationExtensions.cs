@@ -57,8 +57,9 @@ public static class WebApplicationExtensions
             if (mockedService is null || !mockedService.GetType().FullName!.StartsWith("Castle.Proxies"))
                 continue;
             var mockedServiceInstance = Activator.CreateInstance(mockedServiceType) as IMockService;
-            serviceMocksList.Add(new(interfaceType.FullName!, mockedServiceInstance!.MethodMocks, true,
-                mockedServiceInstance.FriendlyName));
+            var fullTypeName = interfaceType.FullName!;
+            var displayName = mockedServiceInstance?.FriendlyName;
+            serviceMocksList.Add(new(fullTypeName, mockedServiceInstance!.MethodMocks, true, displayName));
         }
 
         return serviceMocksList;
