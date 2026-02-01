@@ -1,6 +1,7 @@
 using System.Reflection;
 using DotnetUiMock;
 using Sample.Mocks;
+using UiMock.Tests.Mocks;
 
 namespace UiMock.Tests.Services;
 
@@ -29,7 +30,8 @@ public class WebApplicationExtensionsTests
         // Arrange
         var sampleMocksAssembly = Assembly.GetAssembly(typeof(WeatherServiceMock));
         var testAssembly = Assembly.GetAssembly(typeof(TestMockService));
-        var assemblies = new[] { sampleMocksAssembly!, testAssembly! };
+        var testmocksAssembly = Assembly.GetAssembly(typeof(TestRequestHandlerMock));
+        var assemblies = new[] { sampleMocksAssembly!, testAssembly!, testmocksAssembly! };
 
         // Act
         var result = WebApplicationExtensions.GetMockedServicesList(assemblies);
@@ -44,6 +46,7 @@ public class WebApplicationExtensionsTests
 
         // Verify mocks from test assembly
         Assert.Contains(result, t => t.Name == nameof(TestMockService));
+        Assert.Contains(result, t => t.Name == nameof(TestRequestHandlerMock));
 
         // Verify total count includes mocks from both assemblies
         var sampleMocksCount = result.Count(t => t.Assembly == sampleMocksAssembly);

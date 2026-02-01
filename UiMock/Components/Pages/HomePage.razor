@@ -1,52 +1,42 @@
 @inherits BaseComponent<HomePage.Input>
 
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6" id="home">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-1" id="home">
     @foreach (var serviceMocks in Props.ServiceMocksList)
     {
-        <div class="bg-white rounded-xl shadow-sm ring-1 ring-slate-900/5 overflow-hidden transition-all hover:shadow-md">
-            <!-- Service Header -->
-            <div class="px-6 py-4 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between"
-                 hx-post="/uimock/toggle" hx-trigger="change" hx-include="this" hx-target="#home">
-                
-                <div class="flex items-center gap-3">
-                    <h3 class="text-base font-semibold text-slate-800 tracking-tight">
-                        @(serviceMocks.FriendlyName ?? serviceMocks.ServiceName)
-                    </h3>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium @(serviceMocks.IsMocked ? "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/20" : "bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-500/10")">
-                        @(serviceMocks.IsMocked ? "Mocked" : "Passthrough")
-                    </span>
-                </div>
-
-                <!-- Toggle Switch -->
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
-                    <input type="checkbox" name='isMocked' value="true" checked='@serviceMocks.IsMocked' class="sr-only peer">
-                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                </label>
-            </div>
-
-            <!-- Methods List -->
-            <div class="divide-y divide-slate-100">
-                @foreach (var mock in serviceMocks.MethodMocks)
-                {
-                    <div class="px-6 py-4 flex items-center justify-between gap-6 hover:bg-slate-50 transition-colors group"
-                         hx-post="/uimock/update" hx-trigger="change" hx-include="this" hx-target="#home">
-                        
-                        <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
-                        <input name='methodName' value='@mock.Name' type="hidden">
-
-                        <!-- Method Name -->
-                        <div class="min-w-0 flex-1">
-                            <p class="text-sm font-medium text-slate-900">@mock.Name</p>
+        @if (serviceMocks.MethodMocks.Count == 1)
+        {
+            var mock = serviceMocks.MethodMocks[0];
+            <div class="bg-white rounded-md  ring-1 ring-slate-900/5 overflow-hidden transition-all hover:shadow-md">
+                <div class="px-2 py-1 flex items-center justify-between gap-2">
+                    <div class="min-w-0 flex items-center gap-2">
+                        <h3 class="text-sm font-semibold text-slate-800 tracking-tight truncate">
+                            @(serviceMocks.FriendlyName ?? serviceMocks.ServiceName)
+                        </h3>
+                        <span class="text-slate-300">/</span>
+                        <p class="text-sm text-slate-600 truncate">@mock.Name</p>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium @(serviceMocks.IsMocked ? "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/20" : "bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-500/10")">
+                            @(serviceMocks.IsMocked ? "Mocked" : "Passthrough")
+                        </span>
+                        <div class="flex items-center"
+                             hx-post="/uimock/toggle" hx-trigger="change" hx-include="this" hx-target="#home">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
+                                <input type="checkbox" name='isMocked' value="true" checked='@serviceMocks.IsMocked' class="sr-only peer">
+                                <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                            </label>
                         </div>
+                    </div>
 
-                        <!-- Controls -->
-                        <div class="flex items-center gap-4">
-                            <!-- Scenario Select -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3"
+                             hx-post="/uimock/update" hx-trigger="change" hx-include="this" hx-target="#home">
+                            <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
+                            <input name='methodName' value='@mock.Name' type="hidden">
+
                             <div class="relative">
                                 <select name="scenario" id="@serviceMocks.ServiceName-@mock.Name" 
-                                        class="block w-64 pl-3 pr-10 py-1.5 text-sm border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm transition-shadow">
+                                        class="block w-56 pl-3 pr-10 py-1.5 text-sm border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm transition-shadow">
                                     @foreach (var option in mock.Scenarios)
                                     {
                                         <option value="@option.Name"
@@ -57,20 +47,87 @@
                                 </select>
                             </div>
 
-                            <!-- Delay Input -->
                             <div class="flex items-center gap-2 relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span class="text-slate-400 text-xs">ms</span>
                                 </div>
                                 <input type="text" name="delayMs" value="@(GetDelay(serviceMocks.ServiceName, mock.Name))" 
-                                       class="block w-24 pl-8 pr-3 py-1.5 text-sm border-slate-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-right transition-shadow"
+                                       class="block w-20 pl-8 pr-3 py-1.5 text-sm border-slate-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-right transition-shadow"
                                        placeholder="0" />
                             </div>
                         </div>
                     </div>
-                }
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="bg-white rounded-md ring-1 ring-slate-900/5 overflow-hidden transition-all hover:shadow-md">
+                <!-- Service Header -->
+                <div class="px-2 py-1 bg-slate-50/50 border-b border-slate-100 flex items-center gap-3"
+                     hx-post="/uimock/toggle" hx-trigger="change" hx-include="this" hx-target="#home">
+                    
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-sm font-semibold text-slate-800 tracking-tight">
+                            @(serviceMocks.FriendlyName ?? serviceMocks.ServiceName)
+                        </h3>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium @(serviceMocks.IsMocked ? "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/20" : "bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-500/10")">
+                            @(serviceMocks.IsMocked ? "Mocked" : "Passthrough")
+                        </span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
+                            <input type="checkbox" name='isMocked' value="true" checked='@serviceMocks.IsMocked' class="sr-only peer">
+                            <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Methods List -->
+                <div class="divide-y divide-slate-100">
+                    @foreach (var mock in serviceMocks.MethodMocks)
+                    {
+                        <div class="px-2 pl-4 py-1 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors group"
+                             hx-post="/uimock/update" hx-trigger="change" hx-include="this" hx-target="#home">
+                            
+                            <input name='serviceName' value='@serviceMocks.ServiceName' type="hidden">
+                            <input name='methodName' value='@mock.Name' type="hidden">
+
+                            <!-- Method Name -->
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-medium text-slate-900">@mock.Name</p>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="flex items-center gap-3">
+                                <!-- Scenario Select -->
+                                <div class="relative">
+                                    <select name="scenario" id="@serviceMocks.ServiceName-@mock.Name" 
+                                            class="block w-56 pl-3 pr-10 py-1.5 text-sm border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm transition-shadow">
+                                        @foreach (var option in mock.Scenarios)
+                                        {
+                                            <option value="@option.Name"
+                                                    selected="@(CheckIsActive(serviceMocks.ServiceName, mock.Name, option.Name))">
+                                                @option.Name
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Delay Input -->
+                                <div class="flex items-center gap-2 relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-slate-400 text-xs">ms</span>
+                                    </div>
+                                    <input type="text" name="delayMs" value="@(GetDelay(serviceMocks.ServiceName, mock.Name))" 
+                                           class="block w-20 pl-8 pr-3 py-1.5 text-sm border-slate-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-right transition-shadow"
+                                           placeholder="0" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     }
 </div>
 
